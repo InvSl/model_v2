@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
 
+    <!-- This launch is for tests -->
+    
     <master auto="start"/>
-
-      <!-- Map Server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find model)/map/map.yaml"/>
     <node name="map_service" pkg="model" type="map_service"/>
 
