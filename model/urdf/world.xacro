@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot name="world" xmlns:xacro="http://ros.org/wiki/xacro">
+
+	<material name="white">
+		<color rgba = "1 1 1 1"/>
+	</material>
+
+	<xacro:macro name="no_inertia">
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="1"/>
+			<inertia ixx="1e-6" ixy="1e-6" ixz="1e-6" iyy="1e-6" iyz="1e-6" izz="1e-6"/>
+		</inertial>
+	</xacro:macro>
+
+	<xacro:macro name="wall" params="iwall x y">
+		<link name="wall_${iwall}">
+			<visual>
+				<geometry>
+					<box size="${x} ${y} 0.8"/>
+				</geometry>
+				<material name="white"/>
+			</visual>
+			<collision>
+				<geometry>
+					<box size="${x} ${y} 0.8"/>
+				</geometry>
+			</collision>
+			<xacro:no_inertia/>
+		</link>
+	</xacro:macro>
+
+	<xacro:wall iwall="1" x="0.1" y="10"/>
+	<xacro:wall iwall="2" x="9.8" y="0.1"/>
+	<xacro:wall iwall="5" x="9.8" y="0.1"/>
+	<xacro:wall iwall="6" x="0.1" y="10"/>
+	<xacro:wall iwall="7" x="4.0" y="0.1"/>
+
+	<xacro:macro name="joint_walls" params="iparent ichild x y">
+		<joint name="wall_${iparent}_to_${ichild}" type="fixed">
+			<parent link="wall_${iparent}"/>
+			<child link="wall_${ichild}"/>
+			<origin xyz="${x} ${y} 0"/>
+		</joint>
+	</xacro:macro>
+
+	<xacro:joint_walls iparent="1" ichild="2" x="5" y="5"/>
+	<xacro:joint_walls iparent="1" ichild="5" x="5" y="-5"/>
+	<xacro:joint_walls iparent="1" ichild="6" x="10" y="0"/>
+	<xacro:joint_walls iparent="1" ichild="7" x="5" y="2"/>
+
+
+	<!-- Base link -->
+	<link name="base_wall">
+		<visual>
+			<geometry>
+				<box size="0.1 0.1 0.1"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<box size="0 0 0"/>
+			</geometry>
+		</collision>
+		<xacro:no_inertia/>
+	</link>
+
+	<joint name="base_to_wall_1" type="fixed">
+		<parent link="base_wall"/>
+		<child link="wall_1"/>
+		<origin xyz="0 0 0.25"/>
+	</joint>
+</robot>

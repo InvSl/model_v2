@@ -1,0 +1,5 @@
+#request
+string message
+---
+#response
+nav_msgs/OccupancyGrid map
